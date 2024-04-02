@@ -40,3 +40,13 @@ def robot_start(value: int = 0):
             cursor.execute(query, (str(data.begin_time), str(data.work_duration), data.start_value))
             is_working = False
             return "The robot has stoped working"
+
+@app.get("/robot/working_info")
+def working_info():
+    with sqlite3.connect('db/database.db') as db:
+        cursor = db.cursor()
+        query = """SELECT * FROM robot_working_info;"""
+        cursor.execute(query)
+        return {"datas" : [{"begin_time": res[0],
+                            "work_duration" : res[1],
+                            "start_value" : res[2]} for res in cursor]}
