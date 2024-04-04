@@ -3,18 +3,12 @@ import subprocess
 from datetime import datetime
 
 from fastapi import FastAPI
-from pydantic import BaseModel
+
+from models import WorkingData
 
 app = FastAPI(
     title="Robot"
 )
-
-
-class WorkingData(BaseModel):
-    begin_time: datetime
-    work_duration: datetime
-    start_value: int
-
 
 data = WorkingData
 is_working = False
@@ -41,12 +35,13 @@ def robot_start(value: int = 0):
             is_working = False
             return "The robot has stoped working"
 
+
 @app.get("/robot/working_info")
 def working_info():
     with sqlite3.connect('db/database.db') as db:
         cursor = db.cursor()
         query = """SELECT * FROM robot_working_info;"""
         cursor.execute(query)
-        return {"datas" : [{"begin_time": res[0],
-                            "work_duration" : res[1],
-                            "start_value" : res[2]} for res in cursor]}
+        return {"datas": [{"begin_time": res[0],
+                           "work_duration": res[1],
+                           "start_value": res[2]} for res in cursor]}
