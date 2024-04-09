@@ -2,6 +2,7 @@ import sqlite3
 import subprocess
 from datetime import datetime
 
+import uvicorn
 from fastapi import FastAPI
 
 from models import WorkingData
@@ -45,3 +46,6 @@ def working_info():
         return {"datas": [{"begin_time": res[0],
                            "work_duration": res[1],
                            "start_value": res[2]} for res in cursor]}
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
